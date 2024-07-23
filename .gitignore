@@ -128,11 +128,6 @@ dmypy.json
 # macOS
 *.DS_Store
 
-# Docker
-*.dockerignore
-docker-compose.yml
-Dockerfile
-docker-compose.override.yml
 
 # Logs and databases
 *.log
