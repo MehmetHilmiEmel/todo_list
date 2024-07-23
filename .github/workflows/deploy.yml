@@ -1,4 +1,3 @@
-
 name: Deploy
 
 on:
@@ -7,14 +6,27 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Set up kind
+      run: |
+        curl -Lo kind https://kind.sigs.k8s.io/dl/v0.18.0/kind-darwin-amd64
+        chmod +x ./kind
+        mv ./kind /usr/local/bin/kind
+
+    - name: Create Kubernetes cluster
+      run: |
+        kind create cluster --name kind
+
     - name: Build and Push Docker Image
       run: |
         docker build -t todo-list-app .
         kind load docker-image todo-list-app
+
     - name: Deploy to Kubernetes
       run: |
         kubectl apply -f deployment.yaml
