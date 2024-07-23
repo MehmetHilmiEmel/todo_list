@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      FLASK_APP: app.py
+      FLASK_RUN_HOST: 0.0.0.0
+      DATABASE_URL: postgresql://todo_user:12345@db/todo_db
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: todo_user
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: todo_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
