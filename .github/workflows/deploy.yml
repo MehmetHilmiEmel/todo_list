@@ -2,33 +2,42 @@ name: Deploy
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-
+    runs-on: self-hosted
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    
-    - name: Set up kind
-      run: |
-        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
-        chmod +x ./kind
-        mv ./kind /usr/local/bin/kind
+      - name: Checkout code
+        uses: actions/checkout@v3
 
+      - name: Set up Kubernetes
+        uses: azure/setup-kubectl@v1
+        with:
+          version: '1.21.0'
 
-    - name: Create Kubernetes cluster
-      run: |
-        kind create cluster --name kind
+      - name: Set up Kind
+        run: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
+          chmod +x ./kind
+          mv ./kind /usr/local/bin/kind
 
-    - name: Build and Push Docker Image
-      run: |
-        docker build -t todo-list-app .
-        kind load docker-image todo-list-app
+      - name: Create Kind cluster
+        run: |
+          kind create cluster --name my-cluster --config kind-config.yaml
 
-    - name: Deploy to Kubernetes
-      run: |
-        kubectl apply -f deployment.yaml
-        kubectl apply -f service.yaml
+      - name: Load Docker image into Kind
+        run: |
+          kind load docker-image your-dockerhub-username/todo-list-backend:latest --name my-cluster
+
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
+
+      - name: Check services and pods
+        run: |
+          kubectl get po,svc
+          
