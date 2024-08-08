@@ -1,10 +1,20 @@
-GET http://127.0.0.1:5000/tasks
+GET http://127.0.0.1:30007/tasks
 
 
 ##############################
-POST http://localhost:5000/tasks
+POST http://localhost:30007/tasks
 Content-Type: application/json
 
 {
-    "title":"şu an bunu yapıyorum falan filan"
+    "title":"Kubernetes Kurulumunu tamamla"
+}
+
+
+##############################
+PATCH  http://localhost:30007/tasks/1
+Content-Type: application/json
+
+{
+    "title":"Kubernetes Kurulumunu tamamla (edited)",
+    "completed":true
 }

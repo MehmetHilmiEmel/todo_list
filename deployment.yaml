@@ -1,19 +1,63 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo-list-app-web
+  name: todo-list-backend
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
-      app: todo-list-app-web
+      app: todo-list-backend
   template:
     metadata:
       labels:
-        app: todo-list-app-web
+        app: todo-list-backend
     spec:
       containers:
-      - name: todo-list-app-web
-        image: todo-list-app-web:latest
-        ports:
-        - containerPort: 5000
+        - name: todo-list-backend
+          image: hilmiemel/todo-list-backend:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: POSTGRES_DB
+              value: "todo_db"
+            - name: POSTGRES_USER
+              value: "todo_user"
+            - name: POSTGRES_PASSWORD
+              value: "12345"
+            - name: POSTGRES_HOST
+              value: "todo-postgres"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-postgres
+  template:
+    metadata:
+      labels:
+        app: todo-postgres
+    spec:
+      containers:
+        - name: todo-postgres
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "todo_db"
+            - name: POSTGRES_USER
+              value: "todo_user"
+            - name: POSTGRES_PASSWORD
+              value: "12345"
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-storage
+      volumes:
+        - name: postgres-storage
+
+
+#kubectl port-forward svc/todo-list-backend 30007:80 komuıt satırını kullanıyorum en sonda.

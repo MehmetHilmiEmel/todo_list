@@ -6,13 +6,13 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      - db
+      - todo-postgres
     environment:
       FLASK_APP: app.py
       FLASK_RUN_HOST: 0.0.0.0
-      DATABASE_URL: postgresql://todo_user:12345@db/todo_db
+      DATABASE_URL: postgresql://todo_user:12345@todo-postgres/todo_db
 
-  db:
+  todo-postgres:
     image: postgres:13
     environment:
       POSTGRES_USER: todo_user

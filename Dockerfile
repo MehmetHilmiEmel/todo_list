@@ -1,4 +1,5 @@
-FROM python:3.9.6
+# Dockerfile
+FROM python:3.9-slim
 
 WORKDIR /app
 
@@ -7,6 +8,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-
 CMD ["python", "app.py"]
-

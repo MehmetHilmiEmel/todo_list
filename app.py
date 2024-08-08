@@ -1,19 +1,31 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://todo_user:12345@db:5432/todo_db'
+
+# Environment variables for database connection
+db_user = os.getenv('POSTGRES_USER', 'todo_user')
+db_password = os.getenv('POSTGRES_PASSWORD', '12345')
+db_host = os.getenv('POSTGRES_HOST', 'todo-postgres')
+db_name = os.getenv('POSTGRES_DB', 'todo_db')
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_password}@{db_host}:5432/{db_name}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     completed = db.Column(db.Boolean, default=False)
 
-# with app.app_context():
-#     db.create_all()
+@app.route('/')
+def home():
+    return jsonify(message="Kubernetes To-Do List API!")
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    return 'OK', 200
 
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
