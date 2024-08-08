@@ -10,13 +10,6 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Kubernetes
-        uses: azure/setup-kubectl@v1
-        with:
-          version: '1.21.0'
 
       - name: Set up Kind
         run: |
@@ -26,11 +19,11 @@ jobs:
 
       - name: Create Kind cluster
         run: |
-          kind create cluster --name my-cluster --config kind-config.yaml
+          kind create cluster --name my-cluster
 
       - name: Load Docker image into Kind
         run: |
-          kind load docker-image your-dockerhub-username/todo-list-backend:latest --name my-cluster
+          kind load docker-image hilmiemel/todo-list-backend:latest --name my-cluster
 
       - name: Apply Kubernetes manifests
         run: |
