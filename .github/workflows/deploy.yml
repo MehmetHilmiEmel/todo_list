@@ -11,15 +11,9 @@ jobs:
     runs-on: self-hosted
     steps:
 
-
-      - name: Create Kind cluster
-        run: |
-          kind create cluster --name my-cluster
-
       - name: Load Docker image into Kind
         run: |
-          kind load docker-image hilmiemel/todo-list-backend:latest --name my-cluster
-
+          kind load docker-image hilmiemel/todo-list-backend:latest
       - name: Apply Kubernetes manifests
         run: |
           kubectl apply -f deployment.yaml
