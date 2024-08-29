@@ -1,0 +1,10 @@
+* Container nedir?
+** Process vs Container
+   
+* Kubernetes Pod, Replicaset, Deployment, Statefulset ve Daemonset nedir?
+
+* Kubernetes Ingress nedir?
+** K8s'e nginx ingress kurulacak. Uygulamaya Nginx Ingress vasıtasıyla erişikecek.
+
+
+"Kind ingress"
